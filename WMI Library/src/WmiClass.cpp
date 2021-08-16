@@ -5,9 +5,9 @@
 
 namespace Jade
 {
-	WmiClass::WmiClass(IWbemClassObject*& arg_pClass)
-		: _pClass(arg_pClass)
+	WmiClass::WmiClass(const std::wstring& arg_strClassName, IWbemServices* const& arg_pServices)
 	{
+		arg_pServices->GetObject(CComBSTR(arg_strClassName.c_str()), 0, nullptr, &_pClass, nullptr);
 		std::cout << "[WmiClass] constructed!" << std::endl;
 	}
 
@@ -17,20 +17,9 @@ namespace Jade
 		std::cout << "[WmiClass] destroyed!" << std::endl;
 	}
 
-	BSTR WmiClass::GetPath() const
+	WmiMethod WmiClass::GetMethod(const std::wstring& arg_strMethodName, const std::wstring& arg_strClassPath) const
 	{
-		CComVariant vtPath;
-		_pClass->Get(L"__PATH", 0, &vtPath, nullptr, nullptr);
-
-		return vtPath.bstrVal;
-	}
-
-	WmiMethod WmiClass::GetMethod(const std::wstring& arg_strMethodName) const
-	{
-		IWbemClassObject* pMethod = nullptr;
-		_pClass->GetMethod(arg_strMethodName.c_str(), 0, &pMethod, nullptr);
-		
-		return WmiMethod(pMethod, GetPath(), CComBSTR(arg_strMethodName.c_str()));
+		return WmiMethod(arg_strMethodName, _pClass, arg_strClassPath);
 	}
 
 	IWbemClassObject* WmiClass::GetObjectPtr() const

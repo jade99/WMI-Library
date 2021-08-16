@@ -26,6 +26,7 @@ namespace Jade
 	public:
 		WmiClass GetClass(const std::wstring& arg_strClassName) const;
 		void ExecMethod(const WmiInstance<WmiMethod>& arg_wmiMethodInstance) const;
+		IEnumWbemClassObject* Query(const std::wstring& arg_strQuery) const;
 	};
 }
 

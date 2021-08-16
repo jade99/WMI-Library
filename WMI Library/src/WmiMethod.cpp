@@ -4,9 +4,14 @@
 
 namespace Jade
 {
-	WmiMethod::WmiMethod(IWbemClassObject*& arg_pMethod, const BSTR arg_strClassPath, const BSTR arg_strMethodName)
-		: _pMethod(arg_pMethod), _strClassPath(arg_strClassPath), _strMethodName(arg_strMethodName)
+	WmiMethod::WmiMethod(
+		const std::wstring arg_strMethodName,
+		IWbemClassObject* const& arg_pClass,
+		const std::wstring arg_strClassPath
+	)
+		: _strClassPath(arg_strClassPath), _strMethodName(arg_strMethodName)
 	{
+		arg_pClass->GetMethod(CComBSTR(arg_strMethodName.c_str()), 0, &_pMethod, nullptr);
 		std::cout << "[WmiMethod] constructed!" << std::endl;
 	}
 
@@ -26,12 +31,12 @@ namespace Jade
 		return _pMethod;
 	}
 
-	BSTR WmiMethod::GetClassPath() const
+	std::wstring WmiMethod::GetClassPath() const
 	{
 		return _strClassPath;
 	}
 
-	BSTR WmiMethod::GetMethodName() const
+	std::wstring WmiMethod::GetMethodName() const
 	{
 		return _strMethodName;
 	}

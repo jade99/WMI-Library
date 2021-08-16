@@ -23,10 +23,11 @@ namespace Jade
 
 	public:
 		const T* GetMember() const;
-		IWbemClassObject* GetInstance() const;
+		IWbemClassObject* GetInstancePtr() const;
 
-		void Put(const std::wstring& arg_strPropertyName, VARIANT& vtProp) const;
+		void Put(const std::wstring& arg_strPropertyName, VARIANT vtProp) const;
 		BSTR GetXML() const;
+		VARIANT Get(const std::wstring& arg_strPropertyName) const;
 	};
 
 }

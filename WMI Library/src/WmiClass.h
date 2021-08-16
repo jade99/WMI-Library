@@ -20,13 +20,12 @@ namespace Jade
 		WmiClass() = delete;
 		~WmiClass();
 
-		WmiClass(IWbemClassObject*& arg_pClass);
+		WmiClass(const std::wstring& arg_strClassName, IWbemServices* const& arg_pServices);
 
 	public:
-		BSTR GetPath() const;
 		IWbemClassObject* GetObjectPtr() const;
 
-		WmiMethod GetMethod(const std::wstring& arg_strMethodName) const;
+		WmiMethod GetMethod(const std::wstring& arg_strMethodName, const std::wstring& arg_strClassPath) const;
 		WmiInstance<WmiClass> CreateInstance() const;
 	};
 }

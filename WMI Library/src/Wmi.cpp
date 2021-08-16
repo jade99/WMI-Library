@@ -74,23 +74,28 @@ namespace Jade
 
 	WmiClass Wmi::GetClass(const std::wstring& arg_strClassName) const
 	{
-		IWbemClassObject* pClass = nullptr;
-		_pServices->GetObjectW(CComBSTR(arg_strClassName.c_str()), 0, nullptr, &pClass, nullptr);
-
-		return WmiClass(pClass);
+		return WmiClass(arg_strClassName, _pServices);
 	}
 
 	void Wmi::ExecMethod(const WmiInstance<WmiMethod>& arg_wmiMethodInstance) const
 	{
 		const auto hres = _pServices->ExecMethod(
-			arg_wmiMethodInstance.GetMember()->GetClassPath(),
-			arg_wmiMethodInstance.GetMember()->GetMethodName(),
+			CComBSTR(arg_wmiMethodInstance.GetMember()->GetClassPath().c_str()),
+			CComBSTR(arg_wmiMethodInstance.GetMember()->GetMethodName().c_str()),
 			0, nullptr,
-			arg_wmiMethodInstance.GetInstance(),
+			arg_wmiMethodInstance.GetInstancePtr(),
 			nullptr,
 			nullptr
 		);
 
 		std::cout << "Error 0x" << std::hex << hres << std::endl;
+	}
+
+	IEnumWbemClassObject* Wmi::Query(const std::wstring& arg_strQuery) const
+	{
+		IEnumWbemClassObject* pEnum = nullptr;
+		_pServices->ExecQuery(CComBSTR(L"WQL"), CComBSTR(arg_strQuery.c_str()), WBEM_FLAG_FORWARD_ONLY | WBEM_FLAG_RETURN_IMMEDIATELY, nullptr, &pEnum);
+
+		return pEnum;
 	}
 }

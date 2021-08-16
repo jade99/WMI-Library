@@ -28,7 +28,7 @@ namespace Jade
 	}
 
 	template<typename T>
-	IWbemClassObject* WmiInstance<T>::GetInstance() const
+	IWbemClassObject* WmiInstance<T>::GetInstancePtr() const
 	{
 		return _pInstance;
 	}
@@ -40,10 +40,21 @@ namespace Jade
 	}
 
 	template<typename T>
-	void WmiInstance<T>::Put(const std::wstring& arg_strPropertyName, VARIANT& vtProp) const
+	void WmiInstance<T>::Put(const std::wstring& arg_strPropertyName, VARIANT vtProp) const
 	{
 		auto hres = _pInstance->Put(arg_strPropertyName.c_str(), 0, &vtProp, NULL);
 		std::cout << "0x" << std::hex << hres << std::endl;
+	}
+
+	template<typename T>
+	VARIANT WmiInstance<T>::Get(const std::wstring& arg_strPropertyName) const
+	{
+		VARIANT vtProp;
+		VariantInit(&vtProp);
+
+		_pInstance->Get(arg_strPropertyName.c_str(), 0, &vtProp, nullptr, nullptr);
+
+		return vtProp;
 	}
 
 	template<typename T>
@@ -54,6 +65,8 @@ namespace Jade
 
 		CComBSTR strXML;
 		pTextSource->GetText(0, _pInstance, WMI_OBJ_TEXT_WMI_DTD_2_0, nullptr, &strXML);
+
+		pTextSource.Release();
 
 		return strXML;
 	}
