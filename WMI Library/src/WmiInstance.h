@@ -9,27 +9,25 @@
 namespace Jade
 {
 	template<typename T>
-	class WmiInstance
+	class WmiInstance : public WmiObject
 	{
 	private:
-		IWbemClassObject* _pInstance = nullptr;
-		const T* _pMember;
+		const T& _pMember;
 
 	public:
 		WmiInstance() = delete;
 		~WmiInstance();
 
-		WmiInstance(const T* arg_pMember);
+		WmiInstance(const T& arg_pMember);
 
 	public:
-		const T* GetMember() const;
-		IWbemClassObject* GetInstancePtr() const;
+		const T& GetMember() const;
 
 		void Put(const std::wstring& arg_strPropertyName, VARIANT vtProp) const;
-		BSTR GetXML() const;
 		VARIANT Get(const std::wstring& arg_strPropertyName) const;
-	};
 
+		std::wstring GetObjectText() const;
+	};
 }
 
 #include "WmiInstance.inl"

@@ -24,9 +24,12 @@ namespace Jade
 		Wmi(const std::wstring& arg_strWmiPath, const wchar_t* arg_strUsername, const wchar_t* arg_strPassword);
 
 	public:
-		WmiClass GetClass(const std::wstring& arg_strClassName) const;
-		void ExecMethod(const WmiInstance<WmiMethod>& arg_wmiMethodInstance) const;
 		IEnumWbemClassObject* Query(const std::wstring& arg_strQuery) const;
+
+		void ExecMethod(const WmiInstance<WmiMethod>& arg_wmiMethodInstance, const std::wstring& arg_strAlternateClass) const;
+		void ExecMethod(const WmiInstance<WmiMethod>& arg_wmiMethodInstance) const;
+
+		WmiClass GetClass(const std::wstring& arg_strClassName) const;
 	};
 }
 
