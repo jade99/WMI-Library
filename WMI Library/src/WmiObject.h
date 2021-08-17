@@ -29,9 +29,9 @@ namespace Jade
 
 	protected:
 		void RetrievePath();
-		IWbemClassObject* GetObjectPtr() const;
 
 	public:
+		IWbemClassObject* GetObjectPtr() const;
 		std::wstring GetObjectName() const;
 		std::wstring GetObjectPath() const;
 	};

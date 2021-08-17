@@ -4,6 +4,7 @@
 #define _WMICLASS_H
 
 #include "DLLDefinition.h"
+#include "WmiObject.h"
 #include "WmiMethod.h"
 
 #include <string>
@@ -11,11 +12,8 @@
 
 namespace Jade
 {
-	class DLLDECL WmiClass
+	class DLLDECL WmiClass : public WmiObject
 	{
-	private:
-		IWbemClassObject* _pClass = nullptr;
-
 	public:
 		WmiClass() = delete;
 		~WmiClass();
@@ -23,9 +21,7 @@ namespace Jade
 		WmiClass(const std::wstring& arg_strClassName, IWbemServices* const& arg_pServices);
 
 	public:
-		IWbemClassObject* GetObjectPtr() const;
-
-		WmiMethod GetMethod(const std::wstring& arg_strMethodName, const std::wstring& arg_strClassPath) const;
+		WmiMethod GetMethod(const std::wstring& arg_strMethodName) const;
 		WmiInstance<WmiClass> CreateInstance() const;
 	};
 }

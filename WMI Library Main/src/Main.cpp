@@ -20,23 +20,12 @@ int main()
 	vtElementName.Clear();
 
 	const auto OWmiVSMS = OWmi.GetClass(L"Msvm_VirtualSystemManagementService");
-
-	const auto pEnum = OWmi.Query(L"SELECT * FROM Msvm_VirtualSystemManagementService");
-	
-	ULONG ulReturn;
-	CComPtr<IWbemClassObject> pVSMS;
-	pEnum->Next(WBEM_INFINITE, 1, &pVSMS, &ulReturn);
-	pEnum->Release();
-
-	CComVariant pPATH;
-	pVSMS->Get(L"__PATH", 0, &pPATH, nullptr, nullptr);
-
-	const auto OWmiDefineMethod = OWmiVSMS.GetMethod(L"DefineSystem", pPATH.bstrVal);
+	const auto OWmiDefineMethod = OWmiVSMS.GetMethod(L"DefineSystem");
 	const auto OWmiDefineInstance = OWmiDefineMethod.CreateInstance();
 
 	CComVariant vtSystemSettings;
 	vtSystemSettings.vt = VT_BSTR;
-	vtSystemSettings.bstrVal = OWmiVSSDInstance.GetXML();
+	vtSystemSettings.bstrVal = CComBSTR(OWmiVSSDInstance.GetObjectText().c_str());
 
 	OWmiDefineInstance.Put(L"SystemSettings", vtSystemSettings);
 
@@ -48,7 +37,17 @@ int main()
 	vtSystemSettings = OWmiDefineInstance.Get(L"SystemSettings");
 	//std::wcout << vtSystemSettings.bstrVal << std::endl;
 
-	OWmi.ExecMethod(OWmiDefineInstance);
+	const auto pEnum = OWmi.Query(L"SELECT * FROM Msvm_VirtualSystemManagementService");
+
+	ULONG ulReturn;
+	CComPtr<IWbemClassObject> pVSMS;
+	pEnum->Next(WBEM_INFINITE, 1, &pVSMS, &ulReturn);
+	pEnum->Release();
+
+	CComVariant vtPATH;
+	pVSMS->Get(L"__PATH", 0, &vtPATH, nullptr, nullptr);
+
+	OWmi.ExecMethod(OWmiDefineInstance, vtPATH.bstrVal);
 
 	return 0;
 }

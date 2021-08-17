@@ -7,8 +7,8 @@ namespace Jade
 {
 	WmiObject::WmiObject(const std::wstring& arg_strObjectName)
 	{
-		const auto length = arg_strObjectName.size();
-		_strObjectName = new wchar_t[length + 1];
+		const auto length = arg_strObjectName.size() + 1;
+		_strObjectName = new wchar_t[length];
 		wcscpy_s(_strObjectName, length, arg_strObjectName.c_str());
 
 		std::cout << "[WmiObject] created!" << std::endl;
@@ -18,12 +18,12 @@ namespace Jade
 	{
 		_pObject = arg_wmiOther._pObject;
 
-		const auto lenName = wcslen(arg_wmiOther._strObjectName);
-		_strObjectName = new wchar_t[lenName + 1];
+		const auto lenName = wcslen(arg_wmiOther._strObjectName) + 1;
+		_strObjectName = new wchar_t[lenName];
 		wcscpy_s(_strObjectName, lenName, arg_wmiOther._strObjectName);
 
-		const auto lenPath = wcslen(arg_wmiOther._strObjectPath);
-		_strObjectPath = new wchar_t[lenPath + 1];
+		const auto lenPath = wcslen(arg_wmiOther._strObjectPath) + 1;
+		_strObjectPath = new wchar_t[lenPath];
 		wcscpy_s(_strObjectPath, lenPath, arg_wmiOther._strObjectPath);
 
 		std::cout << "[WmiObject] copied!" << std::endl;
@@ -60,7 +60,8 @@ namespace Jade
 
 		if (FAILED(hres) || vtPATH.vt != VT_BSTR) return;
 
-		const auto length = wcslen(vtPATH.bstrVal);
+		const auto length = wcslen(vtPATH.bstrVal) + 1;
+		_strObjectPath = new wchar_t[length];
 		wcscpy_s(_strObjectPath, length, vtPATH.bstrVal);
 	}
 

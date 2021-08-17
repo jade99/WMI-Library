@@ -77,18 +77,23 @@ namespace Jade
 		return WmiClass(arg_strClassName, _pServices);
 	}
 
-	void Wmi::ExecMethod(const WmiInstance<WmiMethod>& arg_wmiMethodInstance) const
+	void Wmi::ExecMethod(const WmiInstance<WmiMethod>& arg_wmiMethodInstance, const std::wstring& arg_strAlternateClass) const
 	{
 		const auto hres = _pServices->ExecMethod(
-			CComBSTR(arg_wmiMethodInstance.GetMember()->GetClassPath().c_str()),
-			CComBSTR(arg_wmiMethodInstance.GetMember()->GetMethodName().c_str()),
+			CComBSTR(arg_strAlternateClass.c_str()),
+			CComBSTR(arg_wmiMethodInstance.GetMember().GetObjectName().c_str()),
 			0, nullptr,
-			arg_wmiMethodInstance.GetInstancePtr(),
+			arg_wmiMethodInstance.GetObjectPtr(),
 			nullptr,
 			nullptr
 		);
 
-		std::cout << "Error 0x" << std::hex << hres << std::endl;
+		std::cout << "[Wmi::ExecMethod] Return: 0x" << std::hex << hres << std::endl;
+	}
+
+	void Wmi::ExecMethod(const WmiInstance<WmiMethod>& arg_wmiMethodInstance) const
+	{
+		ExecMethod(arg_wmiMethodInstance, arg_wmiMethodInstance.GetMember().GetObjectPath());
 	}
 
 	IEnumWbemClassObject* Wmi::Query(const std::wstring& arg_strQuery) const
