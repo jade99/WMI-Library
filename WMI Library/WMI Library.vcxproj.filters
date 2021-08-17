@@ -52,5 +52,6 @@
     <None Include="src\WmiInstance.inl">
       <Filter>Headerdateien</Filter>
     </None>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="Jade::Wmi">
+    <Position X="12.25" Y="0.75" Width="7.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAMAAAAAAAAAAAAgQACAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>src\Wmi.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jade::WmiClass">
+    <Position X="0.5" Y="4.75" Width="5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAACAAAAAAAAAAAAAAAAAAAAAAAgAAAgAAAA=</HashCode>
+      <FileName>src\WmiClass.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jade::WmiInstance&lt;T&gt;">
+    <Position X="6.25" Y="4.75" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAAABAAAAAAAAIAAAAAAAAACQAABAAAAg=</HashCode>
+      <FileName>src\WmiInstance.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jade::WmiMethod">
+    <Position X="11.25" Y="4.75" Width="7.25" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAEAAAAACAAAAgAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>src\WmiMethod.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jade::WmiObject">
+    <Position X="7.75" Y="0.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAFAAAAAAAKAEAAAAAAACAAAAAABAAAAAAEABAAAAA=</HashCode>
+      <FileName>src\WmiObject.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
