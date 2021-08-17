@@ -3,6 +3,8 @@
 #ifndef _WMI_H
 #define _WMI_H
 
+#pragma comment(lib, "wbemuuid.lib")
+
 #include "DLLDefinition.h"
 #include "WmiClass.h"
 
