@@ -10,7 +10,7 @@
 
 namespace Jade
 {
-	class WmiObject
+	class DLLDECL WmiObject
 	{
 	protected:
 		IWbemClassObject* _pObject = nullptr;
