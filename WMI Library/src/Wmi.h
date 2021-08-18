@@ -13,6 +13,9 @@
 
 namespace Jade
 {
+	/// <summary>
+	/// This Singleton is the basis for connecting and making Query to the Windows Management Instrumentation
+	/// </summary>
 	class DLLDECL SWmi
 	{
 	private:
@@ -24,9 +27,19 @@ namespace Jade
 	public:
 		SWmi(const SWmi& wmi) = delete;
 		
+		/// <summary>
+		/// Performs a query at the current namespace.
+		/// </summary>
+		/// <param name="arg_strQuery">WQL Command to execute</param>
+		/// <returns>An enumeration of all results. The Caller is responsible to call IEnumWbemClassObject::Release()</returns>
 		static IEnumWbemClassObject* Query(const std::wstring& arg_strQuery) 
 		{ return Get().QueryImpl(arg_strQuery); };
 
+		/// <summary>
+		/// Gets a specific CIM-Class
+		/// </summary>
+		/// <param name="arg_strClassName">Name of CIM-Class</param>
+		/// <returns>The request class</returns>
 		static WmiClass GetClass(const std::wstring& arg_strClassName)
 		{ return Get().GetClassImpl(arg_strClassName); };
 
