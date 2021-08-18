@@ -6,7 +6,7 @@
 
 namespace Jade
 {
-	Wmi::Wmi(const std::wstring& arg_strWmiPath, const wchar_t* arg_strUsername, const wchar_t* arg_strPassowrd)
+	SWmi::SWmi()
 	{
 		auto hres = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 
@@ -23,7 +23,7 @@ namespace Jade
 			RPC_C_AUTHN_LEVEL_DEFAULT,
 			RPC_C_IMP_LEVEL_IMPERSONATE,
 			nullptr,
-			NULL,
+			EOAC_NONE,
 			nullptr
 		);
 
@@ -33,55 +33,40 @@ namespace Jade
 			throw std::runtime_error("Could not initalize COM security");
 		}
 
-		hres = CoCreateInstance(CLSID_WbemLocator, nullptr, CLSCTX_INPROC_SERVER, IID_IWbemLocator, (LPVOID*)&_pLocator);
-
-		if (FAILED(hres))
-		{
-			CoUninitialize();
-			throw std::runtime_error("Could not create COM instance");
-		}
-
-		hres = _pLocator->ConnectServer(
-			CComBSTR(arg_strWmiPath.c_str()),
-			CComBSTR(arg_strUsername),
-			CComBSTR(arg_strPassowrd),
-			NULL,
-			0,
-			NULL,
-			nullptr,
-			&_pServices
-		);
-
-		if (FAILED(hres))
-		{
-			_pLocator->Release();
-			CoUninitialize();
-			throw(std::runtime_error("Could not connect to COM"));
-		}
-
-		std::cout << "[Wmi] constructed!" << std::endl;
+		std::cout << "[Wmi] created!" << std::endl;
 	}
 
 
-	Wmi::~Wmi()
+	SWmi::~SWmi()
 	{
-		_pServices->Release();
-		_pLocator->Release();
+		if (_bIsConnected)
+		{
+			DisconnectImpl();
+		}
+
 		CoUninitialize();
 
 		std::cout << "[Wmi] destroyed!" << std::endl;
 	}
 
-	WmiClass Wmi::GetClass(const std::wstring& arg_strClassName) const
+	IEnumWbemClassObject* SWmi::QueryImpl(const std::wstring& arg_strQuery) const
 	{
-		return WmiClass(arg_strClassName, _pServices);
+		IEnumWbemClassObject* pEnum = nullptr;
+		_pServices->ExecQuery(CComBSTR(L"WQL"), CComBSTR(arg_strQuery.c_str()), WBEM_FLAG_FORWARD_ONLY | WBEM_FLAG_RETURN_IMMEDIATELY, nullptr, &pEnum);
+
+		return pEnum;
 	}
 
-	void Wmi::ExecMethod(const WmiInstance<WmiMethod>& arg_wmiMethodInstance, const std::wstring& arg_strAlternateClass) const
+	WmiClass SWmi::GetClassImpl(const std::wstring& arg_strObjectName) const
+	{
+		return WmiClass(arg_strObjectName, _pServices);
+	}
+
+	void SWmi::ExecMethodImpl(const WmiInstance<WmiMethod>& arg_wmiMethodInstance, const std::wstring& arg_strAltObjectPath) const
 	{
 		const auto hres = _pServices->ExecMethod(
-			CComBSTR(arg_strAlternateClass.c_str()),
-			CComBSTR(arg_wmiMethodInstance.GetMember().GetObjectName().c_str()),
+			CComBSTR(arg_strAltObjectPath.c_str()),
+			CComBSTR(arg_wmiMethodInstance.GetObjectName().c_str()),
 			0, nullptr,
 			arg_wmiMethodInstance.GetObjectPtr(),
 			nullptr,
@@ -91,16 +76,55 @@ namespace Jade
 		std::cout << "[Wmi::ExecMethod] Return: 0x" << std::hex << hres << std::endl;
 	}
 
-	void Wmi::ExecMethod(const WmiInstance<WmiMethod>& arg_wmiMethodInstance) const
+	void SWmi::ExecMethodImpl(const WmiInstance<WmiMethod>& arg_wmiMethodInstance) const
 	{
 		ExecMethod(arg_wmiMethodInstance, arg_wmiMethodInstance.GetMember().GetObjectPath());
 	}
 
-	IEnumWbemClassObject* Wmi::Query(const std::wstring& arg_strQuery) const
+	bool SWmi::ConnectImpl(const std::wstring& arg_strWmiPath, const wchar_t* const arg_strUsername, const wchar_t* const arg_strPassword)
 	{
-		IEnumWbemClassObject* pEnum = nullptr;
-		_pServices->ExecQuery(CComBSTR(L"WQL"), CComBSTR(arg_strQuery.c_str()), WBEM_FLAG_FORWARD_ONLY | WBEM_FLAG_RETURN_IMMEDIATELY, nullptr, &pEnum);
+		if (_bIsConnected)
+		{
+			DisconnectImpl();
+		}
 
-		return pEnum;
+		auto hres = CoCreateInstance(CLSID_WbemLocator, nullptr, CLSCTX_INPROC_SERVER, IID_IWbemLocator, (LPVOID*)&_pLocator);
+		if (FAILED(hres)) return false;
+
+		hres = _pLocator->ConnectServer(
+			CComBSTR(arg_strWmiPath.c_str()),
+			CComBSTR(arg_strUsername),
+			CComBSTR(arg_strPassword),
+			NULL,
+			0,
+			NULL,
+			nullptr,
+			&_pServices
+		);
+
+		if (FAILED(hres)) { _pLocator->Release(); return false; }
+
+		hres = CoSetProxyBlanket(
+			_pServices,
+			RPC_C_AUTHN_WINNT,
+			RPC_C_AUTHZ_NONE,
+			nullptr,
+			RPC_C_AUTHN_LEVEL_CALL,
+			RPC_C_IMP_LEVEL_IMPERSONATE,
+			nullptr,
+			EOAC_NONE
+		);
+
+		if (FAILED(hres)) { DisconnectImpl(); return false; }
+
+		_bIsConnected = true;
+
+		return true;
+	}
+
+	void SWmi::DisconnectImpl()
+	{
+		_pServices->Release();
+		_pLocator->Release();
 	}
 }

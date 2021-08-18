@@ -16,6 +16,8 @@ namespace Jade
 	class DLLDECL SWmi
 	{
 	private:
+		bool _bIsConnected = false;
+
 		IWbemLocator* _pLocator = nullptr;
 		IWbemServices* _pServices = nullptr;
 
@@ -27,12 +29,12 @@ namespace Jade
 		static SWmi& Get();
 		
 		static IEnumWbemClassObject* Query(const std::wstring& arg_strQuery);
-		static WmiObject GetWmiObject(const std::wstring& arg_strObjectName);
+		static WmiClass GetWmiClass(const std::wstring& arg_strClassName);
 
-		static void ExecMethod(const WmiInstance<WmiMethod>& arg_wmiMethodInstance, const std::wstring& arg_strAlternateClass);
+		static void ExecMethod(const WmiInstance<WmiMethod>& arg_wmiMethodInstance, const std::wstring& arg_strAltObjectPath);
 		static void ExecMethod(const WmiInstance<WmiMethod>& arg_wmiMethodInstance);
 
-		static void connect(const std::wstring& arg_strNamespace, const wchar_t* const arg_strUsername, const wchar_t* const arg_strPassword);
+		static void connect(const std::wstring& arg_strWmiPath, const wchar_t* const arg_strUsername, const wchar_t* const arg_strPassword);
 		static void disconnect();
 
 	private:
@@ -40,13 +42,13 @@ namespace Jade
 		~SWmi();
 
 		IEnumWbemClassObject* QueryImpl(const std::wstring& arg_strQuery) const;
-		WmiObject GetWmiObjectImpl(const std::wstring& arg_strObjectName) const;
+		WmiClass GetClassImpl(const std::wstring& arg_strClassName) const;
 
-		void ExecMethodImpl(const WmiInstance<WmiMethod>& arg_wmiMethodInstance, const std::wstring& arg_strAlternateClass) const;
+		void ExecMethodImpl(const WmiInstance<WmiMethod>& arg_wmiMethodInstance, const std::wstring& arg_strAltObjectPath) const;
 		void ExecMethodImpl(const WmiInstance<WmiMethod>& arg_wmiMethodInstance) const;
 
-		void connectImpl(const std::wstring& arg_strNamespace, const wchar_t* const arg_strUsername, const wchar_t* const arg_strPassword);
-		void disconnectImpl();
+		bool ConnectImpl(const std::wstring& arg_strWmiPath, const wchar_t* const arg_strUsername, const wchar_t* const arg_strPassword);
+		void DisconnectImpl();
 	};
 }
 
