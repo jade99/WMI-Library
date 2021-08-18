@@ -76,11 +76,6 @@ namespace Jade
 		std::cout << "[Wmi::ExecMethod] Return: 0x" << std::hex << hres << std::endl;
 	}
 
-	void SWmi::ExecMethodImpl(const WmiInstance<WmiMethod>& arg_wmiMethodInstance) const
-	{
-		ExecMethod(arg_wmiMethodInstance, arg_wmiMethodInstance.GetMember().GetObjectPath());
-	}
-
 	bool SWmi::ConnectImpl(const std::wstring& arg_strWmiPath, const wchar_t* const arg_strUsername, const wchar_t* const arg_strPassword)
 	{
 		if (_bIsConnected)
