@@ -1,3 +1,5 @@
+/* Author: Jade */
+
 #pragma once
 
 #ifndef _DLLDEFINITION_H
