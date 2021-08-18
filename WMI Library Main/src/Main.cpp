@@ -6,9 +6,9 @@ using namespace Jade;
 
 int main()
 {
-	const Wmi OWmi(L"\\\\.\\root\\virtualization\\v2", nullptr, nullptr);
+	if (!SWmi::Connect(L"\\\\.\\root\\virtualization\\v2", nullptr, nullptr)) return 1;
 
-	const auto OWmiVSSD = OWmi.GetClass(L"Msvm_VirtualSystemSettingData");
+	const auto OWmiVSSD = SWmi::GetClass(L"Msvm_VirtualSystemSettingData");
 	const auto OWmiVSSDInstance = OWmiVSSD.CreateInstance();
 
 	CComVariant vtElementName;
@@ -19,7 +19,7 @@ int main()
 
 	vtElementName.Clear();
 
-	const auto OWmiVSMS = OWmi.GetClass(L"Msvm_VirtualSystemManagementService");
+	const auto OWmiVSMS = SWmi::GetClass(L"Msvm_VirtualSystemManagementService");
 	const auto OWmiDefineMethod = OWmiVSMS.GetMethod(L"DefineSystem");
 	const auto OWmiDefineInstance = OWmiDefineMethod.CreateInstance();
 
@@ -37,7 +37,7 @@ int main()
 	vtSystemSettings = OWmiDefineInstance.Get(L"SystemSettings");
 	//std::wcout << vtSystemSettings.bstrVal << std::endl;
 
-	const auto pEnum = OWmi.Query(L"SELECT * FROM Msvm_VirtualSystemManagementService");
+	const auto pEnum = SWmi::Query(L"SELECT * FROM Msvm_VirtualSystemManagementService");
 
 	ULONG ulReturn;
 	CComPtr<IWbemClassObject> pVSMS;
@@ -47,7 +47,7 @@ int main()
 	CComVariant vtPATH;
 	pVSMS->Get(L"__PATH", 0, &vtPATH, nullptr, nullptr);
 
-	OWmi.ExecMethod(OWmiDefineInstance, vtPATH.bstrVal);
+	SWmi::ExecMethod(OWmiDefineInstance, vtPATH.bstrVal);
 
 	return 0;
 }
