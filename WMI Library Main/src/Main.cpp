@@ -16,8 +16,20 @@ int main()
 	vtElementName.bstrVal = CComBSTR(L"WMI Library Test");
 
 	OWmiVSSDInstance.Put(L"ElementName", vtElementName);
-
 	vtElementName.Clear();
+
+	CComVariant vtVirtualSystemSubtype;
+	vtVirtualSystemSubtype.vt = VT_BSTR;
+	vtVirtualSystemSubtype.bstrVal = CComBSTR(L"Microsoft:Hyper-V:SubType:2");
+
+	OWmiVSSDInstance.Put(L"VirtualSystemSubType", vtVirtualSystemSubtype);
+
+	CComVariant vtSecureBootTemplate;
+	vtSecureBootTemplate.vt = VT_BSTR;
+	vtSecureBootTemplate.bstrVal = CComBSTR(L"272E7447-90A4-4563-A4B9-8E4AB00526CE");
+
+	OWmiVSSDInstance.Put(L"SecureBootTemplateId", vtSecureBootTemplate);
+	vtSecureBootTemplate.Clear();
 
 	const auto OWmiVSMS = SWmi::GetClass(L"Msvm_VirtualSystemManagementService");
 	const auto OWmiDefineMethod = OWmiVSMS.GetMethod(L"DefineSystem");
