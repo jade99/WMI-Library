@@ -152,11 +152,13 @@
     <ClInclude Include="src\WmiClass.h" />
     <ClInclude Include="src\WmiInstance.h" />
     <ClInclude Include="src\WmiMethod.h" />
+    <ClInclude Include="src\WmiObject.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Wmi.cpp" />
     <ClCompile Include="src\WmiClass.cpp" />
     <ClCompile Include="src\WmiMethod.cpp" />
+    <ClCompile Include="src\WmiObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\WmiInstance.inl" />

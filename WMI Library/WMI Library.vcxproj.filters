@@ -30,6 +30,9 @@
     <ClInclude Include="src\WmiInstance.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="src\WmiObject.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Wmi.cpp">
@@ -39,6 +42,9 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="src\WmiMethod.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WmiObject.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
